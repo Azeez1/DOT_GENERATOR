@@ -1,6 +1,6 @@
-import os
 import json
 import openai
+from backend.config import OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TIMEOUT
 from .main import GenerateRequest, Section
 
 
@@ -119,11 +119,7 @@ Colour palette & chart‑type guidance (see PDF for details)."""
                             company["reportPeriod"]))
 
     # Log the final prompt for debugging
- eticp8-codex/add-print-statement-in-_build_prompt
-    # print(filled)
-=======
     print(filled)
-main
 
     return filled
 
@@ -131,12 +127,12 @@ main
 
 
 def get_completion(payload: GenerateRequest) -> list[Section]:
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = OPENAI_API_KEY
     if not api_key:
         raise ValueError("OPENAI_API_KEY not set")
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    model = OPENAI_MODEL
 
-    client = openai.OpenAI(api_key=api_key)
+    client = openai.OpenAI(api_key=api_key, timeout=OPENAI_TIMEOUT/1000)
     messages = [{
         "role": "user",
         "content": _build_prompt(payload.model_dump())

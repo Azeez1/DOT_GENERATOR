@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 from backend.models import InputData
+from backend.config import OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TIMEOUT
 
 # Pydantic models for request/response structures
 class CompanyInfo(BaseModel):
