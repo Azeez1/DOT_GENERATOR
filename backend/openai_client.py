@@ -108,16 +108,16 @@ Professional, improvement‑focused, use DOT terms.
 ## 6 VISUAL RECREATION INSTRUCTIONS
 Colour palette & chart‑type guidance (see PDF for details)."""
 
-    return (
-        template
-        .replace("[COMPANY_NAME]", company["name"])
-        .replace("[INDUSTRY_TYPE]", company["industry"])
-        .replace("[PRIMARY_COLOR]", company["primaryColor"])
-        .replace("[SECONDARY_COLOR]", company["secondaryColor"])
-        .replace("[LOGO_DETAILS]", company["logoDesc"])
-        .replace("[REPORT_PERIOD]", company["reportPeriod"])
-    )
+    return (template.replace("[COMPANY_NAME]", company["name"]).replace(
+        "[INDUSTRY_TYPE]", company["industry"]).replace(
+            "[PRIMARY_COLOR]", company["primaryColor"]).replace(
+                "[SECONDARY_COLOR]", company["secondaryColor"]).replace(
+                    "[LOGO_DETAILS]",
+                    company["logoDesc"]).replace("[REPORT_PERIOD]",
+                                                 company["reportPeriod"]))
 
+
+print(_build_prompt(req_json))
 
 
 def get_completion(payload: GenerateRequest) -> list[Section]:
@@ -127,7 +127,10 @@ def get_completion(payload: GenerateRequest) -> list[Section]:
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     client = openai.OpenAI(api_key=api_key)
-    messages = [{"role": "user", "content": _build_prompt(payload.model_dump())}]
+    messages = [{
+        "role": "user",
+        "content": _build_prompt(payload.model_dump())
+    }]
 
     response = client.chat.completions.create(
         model=model,
