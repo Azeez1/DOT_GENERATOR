@@ -3,57 +3,61 @@ import json
 import openai
 from .main import GenerateRequest, Section
 
-PROMPT_TEMPLATE = """You are an expert fleet compliance analyst tasked with creating weekly DOT Fleet Compliance Snapshot reports.
+
+def _build_prompt(req_json: dict) -> str:
+    company = req_json["companyInfo"]
+    data = req_json["inputData"]
+    template = """You are an expert fleet compliance analyst tasked with creating weekly DOT Fleet Compliance Snapshot reports.
 Generate a comprehensive report following this exact structure and format.
 
 ---
 COMPANY INFORMATION REQUIRED
-Company Name: <<TODO>>
-Company Type/Industry: <<TODO>>
-Brand Colors: Primary <<TODO>>, Secondary <<TODO>>
-Logo Description: <<TODO>>
-Reporting Week: <<TODO>>
+Company Name: [COMPANY_NAME]
+Company Type/Industry: [INDUSTRY_TYPE]
+Brand Colors: Primary [PRIMARY_COLOR], Secondary [SECONDARY_COLOR]
+Logo Description: [LOGO_DETAILS]
+Reporting Week: [REPORT_PERIOD]
 
 INPUT DATA REQUIRED
-Fleet safety scores (Corporate, Great Lakes, Ohio Valley, Southeast)
+Fleet safety scores (Corporate, Great Lakes, Ohio Valley, Southeast)
 HOS violations (by type & region)
 Safety events
 Unassigned driving segments
 Speeding events breakdown
 Personal conveyance per driver
-Missed DVIR data
+Missed DVIR data
 Contacted individuals list
 
 ---
-# 1 VISUAL DASHBOARD (Page 1)
+# 1 VISUAL DASHBOARD (Page 1)
 ## Header
-* **<<TODO>>** – *DOT Fleet Compliance Snapshot*
-* Date range <<TODO>>
+* **[COMPANY_NAME]** – *DOT Fleet Compliance Snapshot*
+* Date range [REPORT_PERIOD]
 
 ## Fleet Score Widget
-* Show scores & Δ for each region, colour-coded
-* Target line = 90 ("Fleet Safety Score Goal: 90")
+* Show scores & Δ for each region, colour‑coded
+* Target line = 90 ("Fleet Safety Score Goal: 90")
 
 ## HOS Violations Chart
-* Stacked bar by region (GL, OV, SE)
-* Colour key: Missing Certifications (cyan), Shift Duty Limit (orange), Shift Driving Limit (yellow), Cycle Limit (white)
+* Stacked bar by region (GL, OV, SE)
+* Colour key: Missing Certifications (cyan), Shift Duty Limit (orange), Shift Driving Limit (yellow), Cycle Limit (white)
 
-## 4-Week Trend Analysis
-* Line graph per violation type, X = last 4 weeks, Y = 0-200
+## 4‑Week Trend Analysis
+* Line graph per violation type, X = last 4 weeks, Y = 0‑200
 
 ## Safety Events Bar Chart
-* Following Distance, Harsh Turn, Harsh Brake / Defensive Driving per region
+* Following Distance, Harsh Turn, Harsh Brake / Defensive Driving per region
 
 ## Unassigned Driving Segments
-* Visual of segments & top contributors (vehicle ID + driver)
+* Visual of segments & top contributors (vehicle ID + driver)
 
 ## Speeding Events Pie
-* Light / Moderate / Heavy / Severe percentages & total
+* Light / Moderate / Heavy / Severe percentages & total
 
 ---
-# 2 DETAILED ANALYSIS (Pages 2-6)
+# 2 DETAILED ANALYSIS (Pages 2‑6)
 ### Overall Fleet Safety Summary
-• Current fleet score vs goal
+• Current fleet score vs goal
 • Regional changes
 • Key concerns / improvements
 
@@ -62,38 +66,38 @@ Contacted individuals list
 • Regional breakdown, top violation types
 • **Insights:** paragraph
 
-### HOS 4-Week Trend Analysis
+### HOS 4‑Week Trend Analysis
 Describe persistent issues & improvements.
 
 ### Safety Events Analysis
 Totals, dismissal rate, patterns, recommendations.
 
 ### Personal Conveyance Usage
-Goal ≤ 3 h per driver. List violators, analyse compliance.
+Goal ≤ 3 h per driver. List violators, analyse compliance.
 
 ### Unassigned Driving Segments
 Totals, breakdown, root causes & recommendations.
 
 ### Driver Behaviour & Speeding Analysis
-High-risk counts, severities, regional split, recommendations.
+High‑risk counts, severities, regional split, recommendations.
 
 ### Missed DVIRs
-Pre-trip vs post-trip totals, offenders, compliance impact.
+Pre‑trip vs post‑trip totals, offenders, compliance impact.
 
 ### Overall DOT Risk Assessment
 Summarise compliance posture, key risk areas, trend, audit prep.
 
 ---
-## 3 FORMATTING REQUIREMENTS
+## 3 FORMATTING REQUIREMENTS
 * Use brand colours & logo
 * Bold key metrics, bullet lists, "Insights:" headers
 * Tables with clear headers, totals, WoW arrows
-* Percentages rounded 1 dp
+* Percentages rounded 1 dp
 
-## 4 TONE & STYLE
-Professional, improvement-focused, use DOT terms.
+## 4 TONE & STYLE
+Professional, improvement‑focused, use DOT terms.
 
-## 5 KEY METRICS TO CALCULATE
+## 5 KEY METRICS TO CALCULATE
 1. Fleet Safety Score (avg.)
 2. HOS Violation Rate
 3. Safety Event Dismissal Rate
@@ -101,8 +105,19 @@ Professional, improvement-focused, use DOT terms.
 5. DVIR Compliance Rate
 6. Speeding Severity Distribution
 
-## 6 VISUAL RECREATION INSTRUCTIONS
-Colour palette & chart-type guidance (see PDF for details)."""
+## 6 VISUAL RECREATION INSTRUCTIONS
+Colour palette & chart‑type guidance (see PDF for details)."""
+
+    return (
+        template
+        .replace("[COMPANY_NAME]", company["name"])
+        .replace("[INDUSTRY_TYPE]", company["industry"])
+        .replace("[PRIMARY_COLOR]", company["primaryColor"])
+        .replace("[SECONDARY_COLOR]", company["secondaryColor"])
+        .replace("[LOGO_DETAILS]", company["logoDesc"])
+        .replace("[REPORT_PERIOD]", company["reportPeriod"])
+    )
+
 
 
 def get_completion(payload: GenerateRequest) -> list[Section]:
@@ -112,7 +127,7 @@ def get_completion(payload: GenerateRequest) -> list[Section]:
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     client = openai.OpenAI(api_key=api_key)
-    messages = [{"role": "user", "content": PROMPT_TEMPLATE}]
+    messages = [{"role": "user", "content": _build_prompt(payload.model_dump())}]
 
     response = client.chat.completions.create(
         model=model,
