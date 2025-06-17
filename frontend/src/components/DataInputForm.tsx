@@ -105,7 +105,7 @@ export default function DataInputForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch('https://<YOUR_BACKEND>/generate', {
+    fetch('https://e95c0299-36c1-478e-ae78-e8d54752607f-00-2hnwn7mdyqnxz.worf.replit.dev/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ companyInfo, inputData }),
