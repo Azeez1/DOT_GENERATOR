@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from backend.models import InputData
 
 # Pydantic models for request/response structures
 class CompanyInfo(BaseModel):
@@ -10,17 +11,6 @@ class CompanyInfo(BaseModel):
     secondaryColor: str
     logoDesc: str
     reportPeriod: str
-
-
-class InputData(BaseModel):
-    fleetScores: dict
-    hosViolations: dict
-    safetyEvents: dict
-    unassignedDriving: dict
-    speedingEvents: dict
-    personalConveyance: dict
-    missedDVIR: dict
-    contacts: List[str]
 
 
 class GenerateRequest(BaseModel):
