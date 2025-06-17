@@ -97,7 +97,10 @@ export default function DashboardView({ companyInfo, inputData, aiSections }: Da
         </div>
         <div className="border p-4 rounded shadow">
           <h4 className="font-semibold">Personal Conveyance</h4>
-          <p className="text-xl">{inputData.personalConveyance.totalHours ?? inputData.personalConveyance.total}</p>
+          <p className="text-xl">
+            { /* model only has a single numeric value */ }
+            {inputData.personalConveyance.total}
+          </p>
         </div>
         <div className="border p-4 rounded shadow">
           <h4 className="font-semibold">Missed DVIR</h4>
