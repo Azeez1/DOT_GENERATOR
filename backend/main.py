@@ -32,6 +32,10 @@ app = FastAPI(title="DOT Fleet Compliance Report Generator")
 
 @app.post("/generate", response_model=GenerateResponse)
 async def generate_report(payload: GenerateRequest):
+    # Build the prompt to verify placeholder data
+    from backend import openai_client
+    openai_client._build_prompt(payload.model_dump())
+
     # For now return a single stub section as placeholder
     return GenerateResponse(
         sections=[Section(title="Stub", markdown="Work in progress")]
