@@ -28,6 +28,7 @@ export interface InputData {
   personalConveyance: { total: number };
   missedDVIR: { total: number };
   contacts: string[];
+  customText: string;
 }
 
 interface DataInputFormProps {
@@ -62,6 +63,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
     personalConveyance: { total: 0 },
     missedDVIR: { total: 0 },
     contacts: [''],
+    customText: '',
   });
 
   const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +130,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4 bg-white p-6 rounded-lg shadow" onSubmit={handleSubmit}>
       <h2 className="text-xl font-bold">Company Info</h2>
       {(
         [
@@ -148,7 +150,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
             id={field}
             name={field}
             type="text"
-            className="border p-2"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             value={companyInfo[field]}
             onChange={handleCompanyChange}
           />
@@ -162,7 +164,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
             <span className="capitalize self-center">{region}</span>
             <input
               type="number"
-              className="border p-2"
+              className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
               value={inputData.fleetScores[region].score}
               onChange={(e) =>
                 handleFleetScoreChange(
@@ -174,7 +176,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
             />
             <input
               type="number"
-              className="border p-2"
+              className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
               value={inputData.fleetScores[region].change}
               onChange={(e) =>
                 handleFleetScoreChange(
@@ -205,7 +207,7 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
           <input
             id={field}
             type="number"
-            className="border p-2"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             value={(inputData as any)[field].total}
             onChange={(e) =>
               handleSimpleFieldChange(field, Number(e.target.value))
@@ -219,22 +221,32 @@ export default function DataInputForm({ onGenerate }: DataInputFormProps) {
         <input
           key={idx}
           type="email"
-          className="border p-2 mb-2 w-full"
+          className="border border-gray-300 rounded-md p-2 mb-2 w-full focus:ring-2 focus:ring-blue-500"
           value={contact}
           onChange={(e) => handleContactChange(idx, e.target.value)}
         />
       ))}
       <button
         type="button"
-        className="bg-blue-500 text-white px-3 py-1"
+        className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
         onClick={addContact}
       >
         Add Contact
       </button>
 
+      <h2 className="text-xl font-bold">Custom Text</h2>
+      <textarea
+        className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500"
+        rows={4}
+        value={inputData.customText}
+        onChange={(e) =>
+          setInputData((prev) => ({ ...prev, customText: e.target.value }))
+        }
+      />
+
       <button
         type="submit"
-        className="block bg-green-600 text-white px-4 py-2 mt-4"
+        className="block bg-green-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-green-700"
       >
         Submit
       </button>

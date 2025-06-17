@@ -9,6 +9,7 @@ def _build_prompt(req_json: dict) -> str:
     data = req_json["inputData"]
     template = """You are an expert fleet compliance analyst tasked with creating weekly DOT Fleet Compliance Snapshot reports.
 Generate a comprehensive report following this exact structure and format.
+[CUSTOM_TEXT]
 
 ---
 COMPANY INFORMATION REQUIRED
@@ -116,7 +117,9 @@ Colour palette & chart‑type guidance (see PDF for details)."""
                         "[LOGO_DETAILS]",
                         company["logoDesc"]).replace(
                             "[REPORT_PERIOD]",
-                            company["reportPeriod"]))
+                            company["reportPeriod"]).replace(
+                                "[CUSTOM_TEXT]",
+                                data.get("customText", "")))
 
     # Log the final prompt for debugging
     print(filled)

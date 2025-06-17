@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 class ScoreChange(BaseModel):
     score: int
@@ -14,3 +14,4 @@ class InputData(BaseModel):
     personalConveyance: Dict[str, int]
     missedDVIR: Dict[str, int]
     contacts: List[str]
+    customText: Optional[str] = None
