@@ -108,16 +108,22 @@ Professional, improvement‑focused, use DOT terms.
 ## 6 VISUAL RECREATION INSTRUCTIONS
 Colour palette & chart‑type guidance (see PDF for details)."""
 
-    return (template.replace("[COMPANY_NAME]", company["name"]).replace(
-        "[INDUSTRY_TYPE]", company["industry"]).replace(
-            "[PRIMARY_COLOR]", company["primaryColor"]).replace(
-                "[SECONDARY_COLOR]", company["secondaryColor"]).replace(
-                    "[LOGO_DETAILS]",
-                    company["logoDesc"]).replace("[REPORT_PERIOD]",
-                                                 company["reportPeriod"]))
+    filled = (
+        template.replace("[COMPANY_NAME]", company["name"]).replace(
+            "[INDUSTRY_TYPE]", company["industry"]).replace(
+                "[PRIMARY_COLOR]", company["primaryColor"]).replace(
+                    "[SECONDARY_COLOR]", company["secondaryColor"]).replace(
+                        "[LOGO_DETAILS]",
+                        company["logoDesc"]).replace(
+                            "[REPORT_PERIOD]",
+                            company["reportPeriod"]))
+
+    # Log the final prompt for debugging
+    print(filled)
+
+    return filled
 
 
-print(_build_prompt(req_json))
 
 
 def get_completion(payload: GenerateRequest) -> list[Section]:
