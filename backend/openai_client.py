@@ -119,7 +119,7 @@ Colour palette & chart‑type guidance (see PDF for details)."""
                             company["reportPeriod"]))
 
     # Log the final prompt for debugging
-    print(filled)
+    # print(filled)
 
     return filled
 
