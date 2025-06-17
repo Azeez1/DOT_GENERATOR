@@ -1,4 +1,4 @@
-modules = ["python-3.12"]
+modules = ["nodejs-20", "python-3.12"]
 run = "uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
 
 [nix]
