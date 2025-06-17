@@ -5,7 +5,7 @@ interface ScoreChange {
   change: number;
 }
 
-interface CompanyInfo {
+export interface CompanyInfo {
   name: string;
   industry: string;
   primaryColor: string;
@@ -14,7 +14,7 @@ interface CompanyInfo {
   reportPeriod: string;
 }
 
-interface InputData {
+export interface InputData {
   fleetScores: {
     corporate: ScoreChange;
     greatLakes: ScoreChange;
@@ -30,7 +30,15 @@ interface InputData {
   contacts: string[];
 }
 
-export default function DataInputForm() {
+interface DataInputFormProps {
+  onGenerate: (
+    company: CompanyInfo,
+    input: InputData,
+    sections: { title: string; markdown: string }[]
+  ) => void;
+}
+
+export default function DataInputForm({ onGenerate }: DataInputFormProps) {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
     name: '',
     industry: '',
@@ -111,7 +119,11 @@ export default function DataInputForm() {
       body: JSON.stringify({ companyInfo, inputData }),
     })
       .then((res) => res.json())
-      .then(console.log)
+      .then((data) => {
+        if (data.sections) {
+          onGenerate(companyInfo, inputData, data.sections);
+        }
+      })
       .catch(console.error);
   };
 
